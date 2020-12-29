@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,23 +24,27 @@ public class ReviewServiceController {
   private ReviewDataAccess reviewDataAccess;
 
   @GetMapping("/subject/{subject}")
-  public Page<Review> getReviewBySubject(
+  public ResponseEntity<Page<Review>> getReviewBySubject(
     @PathVariable(value = "subject") String subject,
     @RequestParam(name = "tag", required = false) Set<String> tag,
     @RequestParam(name = "page", defaultValue = "0") Integer page,
     @RequestParam(name = "size", defaultValue = "10") Integer size) {
-    return reviewDataAccess.findBySubject(subject, tag, page, size);
+    Page<Review> pageReview = reviewDataAccess.findBySubject(subject, tag, page, size);
+    return new ResponseEntity<>(pageReview, HttpStatus.OK);
   }
 
   @GetMapping("/{review}")
-  public Review getReviewById(@PathVariable(value = "review") String review) {
+  public ResponseEntity<Review> getReviewById(@PathVariable(value = "review") String review) {
     final Optional<Review> reviewOptional = reviewDataAccess.findById(review);
 
-    return reviewOptional.orElse(null);
+    return reviewOptional
+      .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
+      .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
 
   @PostMapping("/save")
-  public String writeReview(@RequestBody Review candidate) {
-    return reviewDataAccess.save(candidate);
+  public ResponseEntity<String> writeReview(@RequestBody Review candidate) {
+    final String reviewId = reviewDataAccess.save(candidate);
+    return new ResponseEntity<>(reviewId, HttpStatus.OK);
   }
 }

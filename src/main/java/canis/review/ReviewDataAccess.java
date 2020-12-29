@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
 @Controller
 public class ReviewDataAccess {
@@ -28,6 +29,7 @@ public class ReviewDataAccess {
     return reviewRepository.findById(review);
   }
 
+  @Transactional
   public String save(Review candidate) {
     final String id = Optional.ofNullable(candidate.getReview()).orElseGet(() -> UUID.randomUUID().toString());
     final Review review = new Review.ReviewBuilder()
@@ -45,5 +47,4 @@ public class ReviewDataAccess {
     reviewRepository.save(review);
     return review.getReview();
   }
-  
 }
