@@ -6,6 +6,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -14,8 +18,9 @@ public class ReviewDataAccess {
   @Autowired
   private ReviewRepository reviewRepository;
 
-  public Collection<Review> findBySubject(String subject) {
-    return reviewRepository.findBySubject(subject);
+  public Page<Review> findBySubject(String subject, int page, int pageSize) {
+    final Pageable paging = PageRequest.of(page, pageSize, Sort.by("instant").descending());
+    return reviewRepository.findBySubject(subject, paging);
   }
 
   public Optional<Review> findById(String review) {

@@ -2,6 +2,8 @@ package canis.review;
 
 import java.util.Collection;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
 // This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
@@ -9,5 +11,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ReviewRepository extends CrudRepository<Review, String> {
   
-  Collection<Review> findBySubject(String subject);
+  Page<Review> findBySubject(String subject, Pageable pageable);
 }
