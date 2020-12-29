@@ -35,7 +35,7 @@ public class ReviewServiceController {
     return reviewOptional.orElse(null);
   }
 
-  @PostMapping("/add")
+  @PostMapping("/save")
   public String writeReview(@RequestBody Review candidate) {
     return reviewDataAccess.save(candidate);
   }

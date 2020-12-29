@@ -28,9 +28,10 @@ public class ReviewDataAccess {
   }
 
   public String save(Review candidate) {
+    final String id = Optional.ofNullable(candidate.getReview()).orElseGet(() -> UUID.randomUUID().toString());
     final Review review = new Review.ReviewBuilder()
       .instant(Instant.now())
-      .review(UUID.randomUUID().toString())
+      .review(id)
       .author(candidate.getAuthor())
       .subject(candidate.getSubject())
       .header(candidate.getHeader())
