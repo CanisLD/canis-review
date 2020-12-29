@@ -2,6 +2,7 @@ package canis.review;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,9 +24,10 @@ public class ReviewServiceController {
   @GetMapping("/subject/{subject}")
   public Page<Review> getReviewBySubject(
     @PathVariable(value = "subject") String subject,
-    @RequestParam(name = "page", required = true, defaultValue = "0") Integer page,
-    @RequestParam(name = "size", required = true, defaultValue = "10") Integer size) {
-    return reviewDataAccess.findBySubject(subject, page, size);
+    @RequestParam(name = "tag", required = false) Set<String> tag,
+    @RequestParam(name = "page", defaultValue = "0") Integer page,
+    @RequestParam(name = "size", defaultValue = "10") Integer size) {
+    return reviewDataAccess.findBySubject(subject, tag, page, size);
   }
 
   @GetMapping("/{review}")

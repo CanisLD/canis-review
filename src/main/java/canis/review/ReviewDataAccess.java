@@ -3,6 +3,7 @@ package canis.review;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,9 @@ public class ReviewDataAccess {
   @Autowired
   private ReviewRepository reviewRepository;
 
-  public Page<Review> findBySubject(String subject, int page, int pageSize) {
+  public Page<Review> findBySubject(String subject, Set<String> tag, int page, int pageSize) {
     final Pageable paging = PageRequest.of(page, pageSize, Sort.by("instant").descending());
-    return reviewRepository.findBySubject(subject, paging);
+    return reviewRepository.findBySubjectAndTagIn(subject, tag, paging);
   }
 
   public Optional<Review> findById(String review) {
