@@ -27,8 +27,8 @@ public class ReviewServiceController {
   public ResponseEntity<Page<Review>> getReviewBySubject(
     @PathVariable(value = "subject") String subject,
     @RequestParam(name = "tag", required = false) Set<String> tag,
-    @RequestParam(name = "page", defaultValue = "0") Integer page,
-    @RequestParam(name = "size", defaultValue = "10") Integer size) {
+    @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+    @RequestParam(name = "size", required = false, defaultValue = "10") Integer size) {
     Page<Review> pageReview = reviewDataAccess.findBySubject(subject, tag, page, size);
     return new ResponseEntity<>(pageReview, HttpStatus.OK);
   }

@@ -11,5 +11,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ReviewRepository extends CrudRepository<Review, String> {;
 
+  Page<Review> findBySubject(String subject, Pageable paging);
+  
   Page<Review> findBySubjectAndTagIn(String subject, Set<String> tag, Pageable paging);
 }

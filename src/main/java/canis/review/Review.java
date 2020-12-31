@@ -31,7 +31,7 @@ public class Review {
     @Id
     private String review;
     private String subject;
-    private String author;
+    private String reviewer;
     
     private Instant instant;
 
@@ -43,11 +43,6 @@ public class Review {
 
     @Column(length=65536)
     private String body;
-    
-    @Column(length=2048)
-    private String link;
-
-    private Float score;
     
     @ElementCollection
     @CollectionTable(name="tag", joinColumns=@JoinColumn(name="review"))

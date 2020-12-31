@@ -22,7 +22,9 @@ public class ReviewDataAccess {
 
   public Page<Review> findBySubject(String subject, Set<String> tag, int page, int pageSize) {
     final Pageable paging = PageRequest.of(page, pageSize, Sort.by("instant").descending());
-    return reviewRepository.findBySubjectAndTagIn(subject, tag, paging);
+    return (tag == null || tag.isEmpty())
+      ? reviewRepository.findBySubject(subject, paging)
+      : reviewRepository.findBySubjectAndTagIn(subject, tag, paging);
   }
 
   public Optional<Review> findById(String review) {
@@ -35,13 +37,11 @@ public class ReviewDataAccess {
     final Review review = new Review.ReviewBuilder()
       .instant(Instant.now())
       .review(id)
-      .author(candidate.getAuthor())
+      .reviewer(candidate.getReviewer())
       .subject(candidate.getSubject())
       .header(candidate.getHeader())
       .byline(candidate.getByline())
       .body(candidate.getBody())
-      .link(candidate.getLink())
-      .score(candidate.getScore())
       .tag(candidate.getTag())
       .build();
     reviewRepository.save(review);
