@@ -24,12 +24,12 @@ public class ReviewServiceController {
   private ReviewDataAccess reviewDataAccess;
 
   @GetMapping("/subject/{subject}")
-  public ResponseEntity<Page<Review>> getReviewBySubject(
+  public ResponseEntity<Page<Review>> getReviewBySubjectId(
     @PathVariable(value = "subject") String subject,
     @RequestParam(name = "tag", required = false) Set<String> tag,
     @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
     @RequestParam(name = "size", required = false, defaultValue = "10") Integer size) {
-    Page<Review> pageReview = reviewDataAccess.findBySubject(subject, tag, page, size);
+    Page<Review> pageReview = reviewDataAccess.findBySubjectId(subject, tag, page, size);
     return new ResponseEntity<>(pageReview, HttpStatus.OK);
   }
 
