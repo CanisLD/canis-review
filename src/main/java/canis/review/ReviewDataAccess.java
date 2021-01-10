@@ -47,6 +47,17 @@ public class ReviewDataAccess {
     final Instant created = Optional.ofNullable(candidate.getCreated()).orElseGet(() -> now);
     final Status status = Optional.ofNullable(candidate.getStatus()).orElseGet(() -> Status.SUBMITTED);
 
+    final Set<Media> mediaCandidate = candidate.getMedia();
+    final Set<Media> mediaSubmission = (mediaCandidate != null && !mediaCandidate.isEmpty())
+      ? mediaCandidate.stream()
+          .filter(Objects::nonNull)
+          .map(entry -> Media.builder()
+                          .type(entry.getType())
+                          .reference(entry.getReference())
+                          .caption(entry.getCaption())
+                          .build())
+          .collect(Collectors.toUnmodifiableSet())
+      : Collections.emptySet();
 
     final Set<Rating> ratingCandidate = candidate.getRating();
     final Set<Rating> ratingSubmission = (ratingCandidate != null && !ratingCandidate.isEmpty())
@@ -69,8 +80,7 @@ public class ReviewDataAccess {
       .header(candidate.getHeader())
       .byline(candidate.getByline())
       .body(candidate.getBody())
-      .caption(candidate.getCaption())
-      .link(candidate.getLink())
+      .media(mediaSubmission)
       .rating(ratingSubmission)
       .tag(candidate.getTag())
       .build();

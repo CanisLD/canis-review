@@ -1,5 +1,6 @@
 package canis.review;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,11 +18,22 @@ import lombok.Getter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Rating {
+public class Media {
+
+  public static enum MediaType {
+    IMAGE,
+    EMBED_HTML
+  }
   
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private @Getter Long ratingId;
-  private @Getter String topic;
-  private @Getter Double rating;
+  private @Getter Long mediaId;
+  
+  private @Getter MediaType type;
+ 
+  @Column(length=66536) 
+  private @Getter String reference;
+
+  @Column(length=4096)
+  private @Getter String caption;
 }

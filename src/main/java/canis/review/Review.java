@@ -48,11 +48,9 @@ public class Review {
     @Column(length=65536)
     private @Getter String body;
 
-    @Column(length = 4096)
-    private @Getter String caption;
-  
-    @Column(length = 2048)
-    private @Getter String link;    
+    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @JoinColumn(name = "reviewId", nullable = true)
+    private @Getter Set<Media> media;
 
     @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name = "reviewId", nullable = true)
