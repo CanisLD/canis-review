@@ -32,8 +32,8 @@ public class ReviewDataAccess {
   public Page<Review> findBySubjectId(String subjectId, Set<String> tag, int page, int pageSize) {
     final Pageable paging = PageRequest.of(page, pageSize, Sort.by("updated").descending());
     return (tag == null || tag.isEmpty())
-      ? reviewRepository.findBySubjectId(subjectId, paging)
-      : reviewRepository.findBySubjectIdAndTagIn(subjectId, tag, paging);
+      ? reviewRepository.findBySubjectIdAndStatus(subjectId, Status.PUBLISHED, paging)
+      : reviewRepository.findBySubjectIdAndStatusAndTagIn(subjectId, Status.PUBLISHED, tag, paging);
   }
 
   public Optional<Review> findById(String reviewId) {

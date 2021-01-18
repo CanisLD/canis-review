@@ -13,5 +13,7 @@ public interface ReviewRepository extends CrudRepository<Review, String> {;
 
   Page<Review> findBySubjectId(String subjectId, Pageable paging);
 
-  Page<Review> findBySubjectIdAndTagIn(String subjectId, Set<String> tag, Pageable paging);
+  Page<Review> findBySubjectIdAndStatus(String subjectId, Status status, Pageable paging);
+
+  Page<Review> findBySubjectIdAndStatusAndTagIn(String subjectId, Status status, Set<String> tag, Pageable paging);
 }
