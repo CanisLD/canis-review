@@ -1,18 +1,10 @@
 package canis.review;
 
 import java.time.Instant;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.task.TaskExecutorBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,14 +18,9 @@ public class ReviewDataAccess {
   @Autowired
   private ReviewRepository reviewRepository;
 
-  @Autowired
-  private RatingRepository ratingRepository;
-
-  public Page<Review> findBySubjectId(String subjectId, Set<String> tag, int page, int pageSize) {
+  public Page<Review> findBySubjectId(String subjectId, int page, int pageSize) {
     final Pageable paging = PageRequest.of(page, pageSize, Sort.by("updated").descending());
-    return (tag == null || tag.isEmpty())
-      ? reviewRepository.findBySubjectIdAndStatus(subjectId, Status.PUBLISHED, paging)
-      : reviewRepository.findBySubjectIdAndStatusAndTagIn(subjectId, Status.PUBLISHED, tag, paging);
+    return reviewRepository.findBySubjectIdAndStatus(subjectId, Review.Status.PUBLISHED, paging);
   }
 
   public Optional<Review> findById(String reviewId) {
@@ -41,34 +28,11 @@ public class ReviewDataAccess {
   }
 
   @Transactional
-  public String save(Review candidate) {
+  public Review save(Review candidate) {
     final Instant now = Instant.now();
     final String reviewId = Optional.ofNullable(candidate.getReviewId()).orElseGet(() -> UUID.randomUUID().toString());
     final Instant created = Optional.ofNullable(candidate.getCreated()).orElseGet(() -> now);
-    final Status status = Optional.ofNullable(candidate.getStatus()).orElseGet(() -> Status.SUBMITTED);
-
-    final Set<Media> mediaCandidate = candidate.getMedia();
-    final Set<Media> mediaSubmission = (mediaCandidate != null && !mediaCandidate.isEmpty())
-      ? mediaCandidate.stream()
-          .filter(Objects::nonNull)
-          .map(entry -> Media.builder()
-                          .type(entry.getType())
-                          .reference(entry.getReference())
-                          .caption(entry.getCaption())
-                          .build())
-          .collect(Collectors.toUnmodifiableSet())
-      : Collections.emptySet();
-
-    final Set<Rating> ratingCandidate = candidate.getRating();
-    final Set<Rating> ratingSubmission = (ratingCandidate != null && !ratingCandidate.isEmpty())
-      ? ratingCandidate.stream()
-          .filter(Objects::nonNull)
-          .map(entry -> Rating.builder()
-                              .topic(entry.getTopic())
-                              .rating(entry.getRating())
-                              .build())
-          .collect(Collectors.toUnmodifiableSet())
-      : Collections.emptySet();
+    final Review.Status status = Optional.ofNullable(candidate.getStatus()).orElseGet(() -> Review.Status.SUBMITTED);
 
     final Review submission = Review.builder()
       .reviewId(reviewId)
@@ -79,13 +43,13 @@ public class ReviewDataAccess {
       .status(status)
       .header(candidate.getHeader())
       .byline(candidate.getByline())
-      .body(candidate.getBody())
-      .media(mediaSubmission)
-      .rating(ratingSubmission)
-      .tag(candidate.getTag())
+      .copy(candidate.getCopy())
+      .referenceType(candidate.getReferenceType())
+      .reference(candidate.getReference())
+      .rating(candidate.getRating())
       .build();
     reviewRepository.save(submission);
 
-    return submission.getReviewId();
+    return submission;
   }
 }

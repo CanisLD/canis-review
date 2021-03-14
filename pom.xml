@@ -40,17 +40,23 @@
 		</dependency>
 
 		<dependency>
+    	<groupId>com.h2database</groupId>
+    	<artifactId>h2</artifactId>
+    	<scope>runtime</scope>
+		</dependency>
+		
+		<dependency>
+    	<groupId>org.hamcrest</groupId>
+    	<artifactId>hamcrest</artifactId>
+    	<scope>test</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.16</version>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -59,23 +65,13 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <profiles>
-            <profile>dev</profile>
+            <profile>mysqldev</profile>
+          </profiles>
+          <profiles>
+            <profile>h2dev</profile>
           </profiles>
         </configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok-maven-plugin</artifactId>
-				<version>1.18.16.0</version>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>delombok</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>			
 		</plugins>
 	</build>
 

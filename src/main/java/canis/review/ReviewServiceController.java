@@ -1,8 +1,6 @@
 package canis.review;
 
-import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,10 +24,9 @@ public class ReviewServiceController {
   @GetMapping("/subject/{subject}")
   public ResponseEntity<Page<Review>> getReviewBySubjectId(
     @PathVariable(value = "subject") String subject,
-    @RequestParam(name = "tag", required = false) Set<String> tag,
     @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
     @RequestParam(name = "size", required = false, defaultValue = "10") Integer size) {
-    Page<Review> pageReview = reviewDataAccess.findBySubjectId(subject, tag, page, size);
+    Page<Review> pageReview = reviewDataAccess.findBySubjectId(subject, page, size);
     return new ResponseEntity<>(pageReview, HttpStatus.OK);
   }
 
@@ -43,8 +40,8 @@ public class ReviewServiceController {
   }
 
   @PostMapping("/save")
-  public ResponseEntity<String> writeReview(@RequestBody Review candidate) {
-    final String reviewId = reviewDataAccess.save(candidate);
-    return new ResponseEntity<>(reviewId, HttpStatus.OK);
+  public ResponseEntity<Review> postReview(@RequestBody Review candidate) {
+    final Review submission = reviewDataAccess.save(candidate);
+    return new ResponseEntity<>(submission, HttpStatus.CREATED);
   }
 }

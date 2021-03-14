@@ -1,7 +1,5 @@
 package canis.review;
 
-import java.util.Set;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
@@ -13,7 +11,5 @@ public interface ReviewRepository extends CrudRepository<Review, String> {;
 
   Page<Review> findBySubjectId(String subjectId, Pageable paging);
 
-  Page<Review> findBySubjectIdAndStatus(String subjectId, Status status, Pageable paging);
-
-  Page<Review> findBySubjectIdAndStatusAndTagIn(String subjectId, Status status, Set<String> tag, Pageable paging);
+  Page<Review> findBySubjectIdAndStatus(String subjectId, Review.Status status, Pageable paging);
 }
