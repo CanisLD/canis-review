@@ -66,8 +66,6 @@
         <configuration>
           <profiles>
             <profile>mysqldev</profile>
-          </profiles>
-          <profiles>
             <profile>h2dev</profile>
           </profiles>
         </configuration>
