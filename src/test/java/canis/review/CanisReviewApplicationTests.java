@@ -29,15 +29,10 @@ class CanisReviewApplicationTests {
 	@Autowired
 	private MockMvc mvc;
 
-	// @Autowired
-	// private ReviewRepository repository;
-
 	private static String toJsonString(Review review) {
 		try {
 			final ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.findAndRegisterModules();
-			// objectMapper.registerModule(new JavaTimeModule());
-			// objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 			String json = objectMapper.writeValueAsString(review);
 			System.out.println(json);
 			return json;
